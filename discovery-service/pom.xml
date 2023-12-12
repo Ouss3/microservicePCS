@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ouss</groupId>
-    <artifactId>discovry-servies</artifactId>
+    <artifactId>discovery-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>discovry-servies</name>
     <description>discovry-servies</description>
