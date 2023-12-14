@@ -1,0 +1,34 @@
+<div class="p-3">
+  <div class="card">
+    <div class="card-body">
+      <table *ngIf="sales" class="table">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Id Product</th>
+          <th>Date</th>
+          <th>Id Client</th>
+          <th>Product</th>
+          <th>Client</th>
+
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let c of sales">
+          <td>{{c.idSale}}</td>
+          <td>{{c.idProduct}}</td>
+          <td>{{c.date}}</td>
+          <td>{{c.idClient}}</td>
+          <td>{{c.product.name}}</td>
+          <td>{{c.client.nom}}</td>
+        </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+
