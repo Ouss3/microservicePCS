@@ -5,12 +5,14 @@ import com.ouss.clientservice.config.GlobalConfig;
 import com.ouss.clientservice.entites.Client;
 import com.ouss.clientservice.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
+@RequestMapping("/api")
 public class RestController {
     @Autowired
     ClientRepository clientRepository;
@@ -18,6 +20,8 @@ public class RestController {
     GlobalConfig globalConfig;
     @Autowired
     ClientConfig clientConfig;
+    @Autowired
+    KafkaTemplate<String,String> kafkaTemplate;
 
     @GetMapping("/config")
     public GlobalConfig globalConfig(){
@@ -43,6 +47,11 @@ public class RestController {
         c.setNom(client.getNom());
         c.setPrenom(client.getPrenom());
         c.setEmail(client.getEmail());
+
+
+        kafkaTemplate.send("client","client"+id +" updated");
+
+
         return clientRepository.save(c);
     }
     @PostMapping("/clients")
@@ -56,5 +65,6 @@ public class RestController {
     @DeleteMapping("/clients/{id}")
     public void deleteClient(@PathVariable Integer id){
         clientRepository.deleteById(id);
+        kafkaTemplate.send("client","client "+id +" deleted");
     }
 }

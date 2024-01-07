@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @SpringBootApplication
 @EnableConfigurationProperties({GlobalConfig.class, ClientConfig.class})
@@ -18,11 +19,15 @@ public class ClientServiceApplication {
         SpringApplication.run(ClientServiceApplication.class, args);
     }
     @Bean
-    CommandLineRunner start(ClientRepository clientRepository){
+    CommandLineRunner start(ClientRepository clientRepository ){
         return args -> {
             for(int i=0;i<10;i++){
                 Client c = Client.builder().nom("name"+i).prenom("prenom"+i).email("email"+i).build();
                 clientRepository.save(c);
             }
-        };}
+
+        };
+
+
+    }
 }
