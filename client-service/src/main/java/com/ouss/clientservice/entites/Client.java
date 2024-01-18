@@ -1,12 +1,11 @@
 package com.ouss.clientservice.entites;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Data@AllArgsConstructor@NoArgsConstructor@ToString@Builder
@@ -18,4 +17,7 @@ public class Client {
     private String prenom;
     private String email;
     private String password;
+    private String token;
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles;
 }

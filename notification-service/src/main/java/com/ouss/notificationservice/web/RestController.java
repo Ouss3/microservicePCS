@@ -2,6 +2,7 @@ package com.ouss.notificationservice.web;
 
 import com.ouss.notificationservice.entites.Notification;
 import com.ouss.notificationservice.repostry.NotificationRepostry;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,8 +21,8 @@ public class RestController {
     }
 
     @GetMapping("/notifications")
-    public List<Notification> getAll(){
-        return notificationRepostry.findAll();
+    public List<Notification> getAll(Pageable pageable){
+        return notificationRepostry.findAll(pageable).getContent();
     }
 
     @PutMapping("/notifications/{id}")

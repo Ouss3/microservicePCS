@@ -4,8 +4,11 @@ import com.ouss.clientservice.config.ClientConfig;
 import com.ouss.clientservice.config.GlobalConfig;
 import com.ouss.clientservice.entites.Client;
 import com.ouss.clientservice.repository.ClientRepository;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +37,9 @@ public class RestController {
     }
 
     @GetMapping("/clients")
-    public List<Client> getAll(){
-        return clientRepository.findAll();
+
+    public List<Client> getAll(Pageable pageable){
+        return clientRepository.findAll(pageable).getContent();
     }
     @GetMapping("/clients/{id}")
     public Client clientbyid(@PathVariable Integer id){
@@ -44,9 +48,11 @@ public class RestController {
     @PutMapping("/clients/{id}")
     public Client updateClient(@PathVariable Integer id,@RequestBody Client client){
         Client c = clientRepository.findById(id).orElseThrow(()-> new RuntimeException("Client not found"));
-        c.setNom(client.getNom());
-        c.setPrenom(client.getPrenom());
-        c.setEmail(client.getEmail());
+        if (client.getNom()!=null) c.setNom(client.getNom());
+        if (client.getPrenom()!=null) c.setPrenom(client.getPrenom());
+        if (client.getEmail()!=null) c.setEmail(client.getEmail());
+        if(client.getRoles()!=null) c.setRoles(client.getRoles());
+        if(client.getPassword()!=null) c.setPassword(client.getPassword());
 
 
         kafkaTemplate.send("client","client"+id +" updated");
@@ -60,11 +66,18 @@ public class RestController {
         c.setNom(client.getNom());
         c.setPrenom(client.getPrenom());
         c.setEmail(client.getEmail());
+        c.setRoles(client.getRoles());
+        c.setPassword(client.getPassword());
         return clientRepository.save(c);
     }
     @DeleteMapping("/clients/{id}")
     public void deleteClient(@PathVariable Integer id){
         clientRepository.deleteById(id);
         kafkaTemplate.send("client","client "+id +" deleted");
+    }
+
+    @GetMapping("/authenticate")
+    public Authentication authentication(Authentication authentication){
+        return authentication;
     }
 }
